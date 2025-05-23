@@ -1,3 +1,6 @@
+package aimtrainer;
+
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -9,14 +12,12 @@ public class AimTrainerFrame extends JFrame {
         setSize(800, 600);
         setLocationRelativeTo(null);
 
-        GamePanel gamePanel = new GamePanel();
-        add(gamePanel);
+        setContentPane(new StartMenuPanel(this));
         setVisible(true);
-
-        gamePanel.startGame();
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(AimTrainerFrame::new);
+    public void startGame(String nickname, String gameMode) {
+        setContentPane(new GamePanel(nickname, gameMode));
+        revalidate();
     }
 }
