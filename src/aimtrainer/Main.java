@@ -1,9 +1,11 @@
 package aimtrainer;
 
-import aimtrainer.gui.AimTrainerFrame;
+import javax.swing.SwingUtilities;
+
 
 public class Main {
     public static void main(String[] args) {
-        javax.swing.SwingUtilities.invokeLater(AimTrainerFrame::new);
+        SwingUtilities.invokeLater(() -> new AimTrainerFrame());
     }
 }
+

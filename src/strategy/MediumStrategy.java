@@ -1,6 +1,6 @@
 package strategy;
 
-import aimtrainer.panel.GamePanel;
+import panel.GamePanel;
 
 public class MediumStrategy implements GameStrategy {
     public void setupGame(GamePanel panel) {

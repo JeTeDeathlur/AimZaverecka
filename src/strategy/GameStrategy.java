@@ -1,6 +1,6 @@
 package strategy;
 
-import aimtrainer.panel.GamePanel;
+import panel.GamePanel;
 
 public interface GameStrategy {
     void setupGame(GamePanel panel);

@@ -1,8 +1,11 @@
+package panel;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Random;
+import target.*;
 
 public class GamePanel extends JPanel {
     private Target target;
@@ -11,7 +14,7 @@ public class GamePanel extends JPanel {
     private long startTime;
     private Timer timer;
 
-    public GamePanel() {
+    public GamePanel(String nickname, String gameMode) {
         setBackground(Color.BLACK);
 
         addMouseListener(new MouseAdapter() {
@@ -27,6 +30,8 @@ public class GamePanel extends JPanel {
         });
     }
 
+
+
     public void startGame() {
         startTime = System.currentTimeMillis();
         generateNewTarget();
@@ -40,7 +45,17 @@ public class GamePanel extends JPanel {
         int radius = 30;
         int x = rand.nextInt(getWidth() - radius * 2) + radius;
         int y = rand.nextInt(getHeight() - radius * 2) + radius;
-        target = new Target(x, y, radius);
+        target = new Target(x, y, radius) {
+            @Override
+            public void update() {
+                
+            }
+
+            @Override
+            public void draw(Graphics g) {
+
+            }
+        };
     }
 
     private void endGame() {
@@ -56,7 +71,7 @@ public class GamePanel extends JPanel {
         if (target != null) {
             target.draw(g);
         }
-        g.setColor(Color.WHITE);
+        g.setColor(Color.PINK);
         g.drawString("Hits: " + hits, 10, 20);
         g.drawString("Total: " + total, 10, 40);
     }

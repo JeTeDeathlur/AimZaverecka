@@ -1,4 +1,4 @@
-package aimtrainer.target;
+package target;
 
 import java.awt.*;
 

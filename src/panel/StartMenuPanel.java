@@ -1,8 +1,8 @@
 package panel;
 
-import aimtrainer.model.GameMode;
-import aimtrainer.util.RegexValidator;
-
+import model.GameMode;
+import util.RegexValidator;
+import aimtrainer.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;

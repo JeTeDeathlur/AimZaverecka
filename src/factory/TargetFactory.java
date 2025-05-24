@@ -1,7 +1,7 @@
 package factory;
 
-import aimtrainer.model.GameMode;
-import aimtrainer.target.*;
+import model.GameMode;
+import target.*;
 
 import java.util.Random;
 

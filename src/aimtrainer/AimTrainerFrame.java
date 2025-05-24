@@ -2,7 +2,9 @@ package aimtrainer;
 
 
 import javax.swing.*;
-import java.awt.*;
+import panel.StartMenuPanel;
+import panel.GamePanel;
+
 
 public class AimTrainerFrame extends JFrame {
     public AimTrainerFrame() {
