@@ -1,20 +1,26 @@
 package panel;
 
+
+import model.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Random;
 import target.*;
+import factory.*;
 
 public class GamePanel extends JPanel {
-    private Target target;
     private int hits = 0;
     private int total = 0;
-    private long startTime;
+    private Target target;
     private Timer timer;
+    private final String nickname;
+    private final String gameMode;
 
     public GamePanel(String nickname, String gameMode) {
+        this.nickname = nickname;
+        this.gameMode = gameMode;
         setBackground(Color.BLACK);
 
         addMouseListener(new MouseAdapter() {
@@ -28,41 +34,30 @@ public class GamePanel extends JPanel {
                 repaint();
             }
         });
+
+        startGameLoop();
     }
 
-
-
-    public void startGame() {
-        startTime = System.currentTimeMillis();
-        generateNewTarget();
-        timer = new Timer(1000 * 30, e -> endGame());
-        timer.setRepeats(false);
+    private void startGameLoop() {
+        int delay = getDelayForMode(gameMode);
+        timer = new Timer(delay, e -> {
+            generateNewTarget();
+            repaint();
+        });
         timer.start();
     }
 
-    private void generateNewTarget() {
-        Random rand = new Random();
-        int radius = 30;
-        int x = rand.nextInt(getWidth() - radius * 2) + radius;
-        int y = rand.nextInt(getHeight() - radius * 2) + radius;
-        target = new Target(x, y, radius) {
-            @Override
-            public void update() {
-                
-            }
-
-            @Override
-            public void draw(Graphics g) {
-
-            }
-        };
+    private int getDelayForMode(String mode) {
+        switch (GameMode.valueOf(mode)) {
+            case EASY: return 2000;
+            case MEDIUM: return 1000;
+            case HARD: return 700;
+            default: return 1500;
+        }
     }
 
-    private void endGame() {
-        repaint();
-        JOptionPane.showMessageDialog(this, "Time's up!\nHits: " + hits + "/" + total +
-                "\nAccuracy: " + (total > 0 ? (hits * 100 / total) : 0) + "%");
-        System.exit(0);
+    private void generateNewTarget() {
+        target = TargetFactory.createTarget(GameMode.valueOf(gameMode), getWidth(), getHeight());
     }
 
     @Override
@@ -71,8 +66,14 @@ public class GamePanel extends JPanel {
         if (target != null) {
             target.draw(g);
         }
-        g.setColor(Color.PINK);
-        g.drawString("Hits: " + hits, 10, 20);
-        g.drawString("Total: " + total, 10, 40);
+        drawStats(g);
+    }
+
+    private void drawStats(Graphics g) {
+        g.setColor(Color.WHITE);
+        g.setFont(new Font("Arial", Font.BOLD, 18));
+        g.drawString("Nickname: " + nickname, 10, 20);
+        g.drawString("Hits: " + hits, 10, 45);
+        g.drawString("Total: " + total, 10, 70);
     }
 }
