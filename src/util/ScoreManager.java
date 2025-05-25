@@ -23,4 +23,8 @@ public class ScoreManager<T> {
     public List<T> getScores(String player) {
         return scores.getOrDefault(player, new ArrayList<>());
     }
+
+    public void saveScore(String nickname, int score) {
+        System.out.println("Skóre hráče " + nickname + ": " + score);
+    }
 }
