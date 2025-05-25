@@ -1,15 +1,12 @@
 package util;
 
-import java.io.*;
 import java.util.*;
 
 public class ScoreManager<T> {
     private static ScoreManager instance;
-    private Map<String, List<T>> scores;
+    private final Map<String, List<T>> scores = new HashMap<>();
 
-    private ScoreManager() {
-        scores = new HashMap<>();
-    }
+    private ScoreManager() {}
 
     public static synchronized <T> ScoreManager<T> getInstance() {
         if (instance == null) instance = new ScoreManager<>();

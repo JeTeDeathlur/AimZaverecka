@@ -20,5 +20,3 @@ public abstract class Target {
         return dx * dx + dy * dy <= radius * radius;
     }
 }
-
-

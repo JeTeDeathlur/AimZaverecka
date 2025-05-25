@@ -2,28 +2,25 @@ package factory;
 
 import model.GameMode;
 import target.*;
-
 import java.util.Random;
 
 public class TargetFactory {
     private static final Random rand = new Random();
 
-    public static Target createTarget(GameMode mode, int panelWidth, int panelHeight) {
+    public static Target createTarget(GameMode mode, int width, int height) {
         int radius = switch (mode) {
             case EASY -> 40;
             case MEDIUM -> 30;
             case HARD -> 20;
         };
 
-        int x = rand.nextInt(panelWidth - 2 * radius) + radius;
-        int y = rand.nextInt(panelHeight - 2 * radius) + radius;
+        int x = rand.nextInt(width - 2 * radius) + radius;
+        int y = rand.nextInt(height - 2 * radius) + radius;
 
         return switch (mode) {
             case EASY -> new BasicTarget(x, y, radius);
-            case MEDIUM -> rand.nextBoolean() ?
-                    new BasicTarget(x, y, radius) : new MovingTarget(x, y, radius);
-            case HARD -> rand.nextBoolean() ?
-                    new MovingTarget(x, y, radius) : new ShrinkingTarget(x, y, radius);
+            case MEDIUM -> rand.nextBoolean() ? new BasicTarget(x, y, radius) : new MovingTarget(x, y, radius);
+            case HARD -> rand.nextBoolean() ? new MovingTarget(x, y, radius) : new ShrinkingTarget(x, y, radius);
         };
     }
 }

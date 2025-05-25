@@ -8,9 +8,7 @@ public class BasicTarget extends Target {
     }
 
     @Override
-    public void update() {
-
-    }
+    public void update() {}
 
     @Override
     public void draw(Graphics g) {

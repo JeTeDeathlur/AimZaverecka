@@ -1,10 +1,8 @@
 package aimtrainer;
 
-
 import javax.swing.*;
 import panel.StartMenuPanel;
 import panel.GamePanel;
-
 
 public class AimTrainerFrame extends JFrame {
     public AimTrainerFrame() {
@@ -13,7 +11,6 @@ public class AimTrainerFrame extends JFrame {
         setResizable(false);
         setSize(800, 600);
         setLocationRelativeTo(null);
-
         setContentPane(new StartMenuPanel(this));
         setVisible(true);
     }

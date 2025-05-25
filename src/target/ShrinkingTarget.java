@@ -9,9 +9,7 @@ public class ShrinkingTarget extends Target {
 
     @Override
     public void update() {
-        if (radius > 10) {
-            radius--;
-        }
+        if (radius > 10) radius--;
     }
 
     @Override
@@ -20,3 +18,4 @@ public class ShrinkingTarget extends Target {
         g.fillOval(x - radius, y - radius, radius * 2, radius * 2);
     }
 }
+
