@@ -14,13 +14,20 @@ public class TargetFactory {
             case HARD -> 20;
         };
 
-        int x = rand.nextInt(width - 2 * radius) + radius;
-        int y = rand.nextInt(height - 2 * radius) + radius;
+        int maxX = Math.max(1, width - 2 * radius);
+        int maxY = Math.max(1, height - 2 * radius);
+
+        int x = rand.nextInt(maxX) + radius;
+        int y = rand.nextInt(maxY) + radius;
 
         return switch (mode) {
             case EASY -> new BasicTarget(x, y, radius);
-            case MEDIUM -> rand.nextBoolean() ? new BasicTarget(x, y, radius) : new MovingTarget(x, y, radius);
-            case HARD -> rand.nextBoolean() ? new MovingTarget(x, y, radius) : new ShrinkingTarget(x, y, radius);
+            case MEDIUM -> rand.nextBoolean()
+                    ? new BasicTarget(x, y, radius)
+                    : new MovingTarget(x, y, radius);
+            case HARD -> rand.nextBoolean()
+                    ? new MovingTarget(x, y, radius)
+                    : new ShrinkingTarget(x, y, radius);
         };
     }
 }
