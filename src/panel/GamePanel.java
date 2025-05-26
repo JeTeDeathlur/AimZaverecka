@@ -1,14 +1,13 @@
 package panel;
-
+ 
 import factory.TargetFactory;
-import model.GameMode;
-import target.Target;
-
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-
+import javax.swing.*;
+import model.GameMode;
+import target.Target;
+ 
 public class GamePanel extends JPanel {
     private int hits = 0;
     private int total = 0;
@@ -18,30 +17,32 @@ public class GamePanel extends JPanel {
     private int timeLeft = 10_000;
     private final String nickname;
     private final String gameMode;
-
-    public GamePanel(String nickname, String gameMode) {
+    private final String password;
+ 
+    public GamePanel(String nickname, String gameMode, String password) {
         this.nickname = nickname;
         this.gameMode = gameMode;
+        this.password = password;
         setBackground(Color.BLACK);
-
+ 
         addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
                 if (target != null && target.contains(e.getX(), e.getY())) {
                     hits++;
-                    timeLeft += 1000;
+                    timeLeft += 500;
                 } else {
-                    timeLeft -= 1000;
+                    timeLeft -= 3000;
                 }
                 total++;
                 generateNewTarget();
                 repaint();
             }
         });
-
+ 
         startGameLoop();
     }
-
+ 
     private void startGameLoop() {
         spawnTimer = new Timer(16, e -> {
             if (target != null) {
@@ -50,7 +51,7 @@ public class GamePanel extends JPanel {
             repaint();
         });
         spawnTimer.start();
-
+ 
         countdownTimer = new Timer(10, e -> {
             timeLeft -= 10;
             if (timeLeft <= 0) {
@@ -61,18 +62,18 @@ public class GamePanel extends JPanel {
             repaint();
         });
         countdownTimer.start();
-
+ 
         generateNewTarget();
     }
-
+ 
     private void generateNewTarget() {
         target = TargetFactory.createTarget(GameMode.valueOf(gameMode), getWidth(), getHeight());
     }
-
+ 
     private void showResult() {
         JOptionPane.showMessageDialog(this, "Konec hry!\nZásahy: " + hits + "\nCelkem: " + total);
     }
-
+ 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -81,7 +82,7 @@ public class GamePanel extends JPanel {
         }
         drawStats(g);
     }
-
+ 
     private void drawStats(Graphics g) {
         g.setColor(Color.WHITE);
         g.setFont(new Font("Arial", Font.BOLD, 18));

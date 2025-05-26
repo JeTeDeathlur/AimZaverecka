@@ -1,9 +1,9 @@
 package aimtrainer;
-
+ 
 import javax.swing.*;
-import panel.StartMenuPanel;
 import panel.GamePanel;
-
+import panel.StartMenuPanel;
+ 
 public class AimTrainerFrame extends JFrame {
     public AimTrainerFrame() {
         setTitle("Aim Trainer");
@@ -14,9 +14,9 @@ public class AimTrainerFrame extends JFrame {
         setContentPane(new StartMenuPanel(this));
         setVisible(true);
     }
-
-    public void startGame(String nickname, String gameMode) {
-        setContentPane(new GamePanel(nickname, gameMode));
+ 
+    public void startGame(String nickname, String gameMode,String password) {
+        setContentPane(new GamePanel(nickname, gameMode, password));
         revalidate();
     }
 }
