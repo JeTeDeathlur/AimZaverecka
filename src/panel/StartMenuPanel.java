@@ -70,28 +70,46 @@ public class StartMenuPanel extends JPanel {
             String nickname = nicknameField.getText().trim();
             String password = new String(passwordField.getPassword()).trim();
             boolean canGameStart = false;
- 
+
             if (!RegexValidator.isValidNickname(nickname)) {
-                JOptionPane.showMessageDialog(this, "Invalid nickname! (3–15 letters/numbers/underscores)");
+                JOptionPane.showMessageDialog(this,
+                        "Invalid nickname! (3–15 letters/numbers/underscores)",
+                        "Invalid Nickname",
+                        JOptionPane.WARNING_MESSAGE);
                 return;
             }
- 
+
             if (signupButton.isSelected()) {
                 if (credentials.containsKey(nickname)) {
-                    JOptionPane.showMessageDialog(this, "Nickname already exists! Try login.");
+                    JOptionPane.showMessageDialog(this,
+                            "Nickname already exists! Try login.",
+                            "Nickname Exists",
+                            JOptionPane.ERROR_MESSAGE);
                 } else {
                     credentials.put(nickname, password);
                     saveToFile(nickname + "," + password);
-                    JOptionPane.showMessageDialog(this, "Registration successful!");
+                    JOptionPane.showMessageDialog(this,
+                            "Registration successful!",
+                            "Success",
+                            JOptionPane.INFORMATION_MESSAGE);
                     canGameStart = true;
                 }
             } else {
                 if (!credentials.containsKey(nickname)) {
-                    JOptionPane.showMessageDialog(this, "Nickname not found! Please sign up.");
+                    JOptionPane.showMessageDialog(this,
+                            "Nickname not found! Please sign up.",
+                            "Nickname Not Found",
+                            JOptionPane.WARNING_MESSAGE);
                 } else if (!credentials.get(nickname).equals(password)) {
-                    JOptionPane.showMessageDialog(this, "Incorrect password!");
+                    JOptionPane.showMessageDialog(this,
+                            "Incorrect password!",
+                            "Authentication Failed",
+                            JOptionPane.ERROR_MESSAGE);
                 } else {
-                    JOptionPane.showMessageDialog(this, "Login successful!");
+                    JOptionPane.showMessageDialog(this,
+                            "Login successful!",
+                            "Welcome",
+                            JOptionPane.INFORMATION_MESSAGE);
                     canGameStart = true;
                 }
             }
