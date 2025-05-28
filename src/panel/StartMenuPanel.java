@@ -119,8 +119,10 @@ public class StartMenuPanel extends JPanel {
             }
         });
     }
- 
- 
+
+
+
+
     private void loadCredentials() {
         File file = new File("Registrations.csv");
         if (!file.exists()) return;

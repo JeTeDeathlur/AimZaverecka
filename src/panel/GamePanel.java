@@ -1,5 +1,6 @@
 package panel;
- 
+
+import aimtrainer.AimTrainerFrame;
 import factory.TargetFactory;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -7,7 +8,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.*;
 import model.GameMode;
 import target.Target;
- 
+
 public class GamePanel extends JPanel {
     private int hits = 0;
     private int total = 0;
@@ -18,13 +19,13 @@ public class GamePanel extends JPanel {
     private final String nickname;
     private final String gameMode;
     private final String password;
- 
+
     public GamePanel(String nickname, String gameMode, String password) {
         this.nickname = nickname;
         this.gameMode = gameMode;
         this.password = password;
         setBackground(Color.BLACK);
- 
+
         addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
@@ -39,10 +40,10 @@ public class GamePanel extends JPanel {
                 repaint();
             }
         });
- 
+
         startGameLoop();
     }
- 
+
     private void startGameLoop() {
         spawnTimer = new Timer(16, e -> {
             if (target != null) {
@@ -51,29 +52,50 @@ public class GamePanel extends JPanel {
             repaint();
         });
         spawnTimer.start();
- 
+
         countdownTimer = new Timer(10, e -> {
             timeLeft -= 10;
             if (timeLeft <= 0) {
                 spawnTimer.stop();
                 countdownTimer.stop();
-                showResult();
+                showEndScreen();
             }
             repaint();
         });
         countdownTimer.start();
- 
+
         generateNewTarget();
     }
- 
+
     private void generateNewTarget() {
         target = TargetFactory.createTarget(GameMode.valueOf(gameMode), getWidth(), getHeight());
     }
- 
-    private void showResult() {
-        JOptionPane.showMessageDialog(this, "Konec hry!\nZásahy: " + hits + "\nCelkem: " + total);
+
+    private void showEndScreen() {
+        double accuracy = total > 0 ? (100.0 * hits / total) : 0.0;
+
+        EndScreenPanel endScreen = new EndScreenPanel(hits, hits, total - hits, accuracy);
+
+        endScreen.addPlayAgainListener(e -> {
+            JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
+            frame.setContentPane(new GamePanel(nickname, gameMode, password));
+            frame.revalidate();
+            frame.repaint();
+        });
+
+        endScreen.addBackToMenuListener(e -> {
+            JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
+            frame.setContentPane(new StartMenuPanel((AimTrainerFrame) frame));
+            frame.revalidate();
+            frame.repaint();
+        });
+
+        JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
+        frame.setContentPane(endScreen);
+        frame.revalidate();
+        frame.repaint();
     }
- 
+
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -82,7 +104,7 @@ public class GamePanel extends JPanel {
         }
         drawStats(g);
     }
- 
+
     private void drawStats(Graphics g) {
         g.setColor(Color.WHITE);
         g.setFont(new Font("Arial", Font.BOLD, 18));
