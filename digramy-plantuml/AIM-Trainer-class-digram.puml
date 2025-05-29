@@ -1,0 +1,39 @@
+@startuml
+package "aimtrainer" {
+    class AimTrainerFrame {
+        aimTrainerFrame()
+        startGame()
+    }
+    note left: Trida pro \nnastaveni "framu"
+}
+package "panel" {
+    class GamePanel{
+    }
+    class StartMenuPanel{
+    }
+    class EndScreenPanel{
+    }
+}
+package "target" {
+    class Target{       
+    }
+    class BasicTarget{
+    }
+    class MovingTarget{
+    }
+    class ShrinkingTarget{
+    }
+    note bottom of BasicTarget: Trida pro \n...
+    note bottom of MovingTarget: Trida pro \n...
+    note bottom of ShrinkingTarget: Trida pro \n...
+}
+
+AimTrainerFrame-->GamePanel : use
+AimTrainerFrame-->StartMenuPanel : use
+Target <|-- BasicTarget
+Target <|-- MovingTarget
+Target <|-- ShrinkingTarget
+GamePanel-->Target : use
+
+@enduml
+

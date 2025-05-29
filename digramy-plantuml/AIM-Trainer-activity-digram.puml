@@ -1,0 +1,84 @@
+@startuml
+start
+    :Spusteni;
+    if(mod?) then (registrace)
+        repeat     
+            :Zadani \nuzivatelskeho \njmena;
+            :Validace \nuzivatelskeho \njmena;
+            note right: regex Validace
+        repeat while (platne) is (Ne) not (Ano)
+        :Zadani \nhesla;
+        :Ulozeni data \nuzivatele do souboru;
+        note left: username a heslo
+    else (prihlaseni)
+        repeat     
+            :Zadani \nuzivatelskeho \njmena;
+            :Zadani \nhesla;
+            :Prohledani souboru \ns uzivateli;
+        repeat while (uzivatel existuje \nAND\n heslo je spravne?) is (Ne) not (Ano)
+    end if    
+    :Vyber obtiznosti;
+    :Zahajeni hry;
+    :Nastaveni \ncasoveho limitu;
+    note left: 10s
+    switch(obtiznost?)
+    case (easy)
+        repeat 
+            :Zobrazeni velkeho \nstatickeho terce;
+            :Kliknuti hrace;
+            if(trefa do terce?) then (Trefa)
+                :Navyseni \nlimitu \no 3 sec ;
+            else (Netrefa)
+                :Snizeni \nlimitu \no 3 sec ;
+            end if
+        repeat while (vyprsel cas?) is (Ne) not (Ano)
+    case (medium)
+        repeat 
+            :Zobrazeni \nmensiho \nstatickeho terce;
+            :Zobrazeni mensich\n pohybujicich\n tercu;
+            fork
+                :Kontinualni \nposouvani\npohybujicich \n tercu;
+            fork again    
+                :Hrac <b>"Klikne"</b>;
+            end fork
+            if(trefa do terce?) then (Trefa)
+                :Navyseni \nlimitu \no 1.5 sec ;
+            else (Netrefa)
+                :Snizeni \nlimitu \no 3 sec ;
+            end if
+        repeat while (vyprsel cas?) is (Ne) not (Ano)
+    case (hard)
+        repeat 
+            :Zobrazeni \nnejmensiho \nstatickeho terce;
+            :Zobrazeni nejmensich\n pohybujicich\n tercu;
+            fork
+                :Kontinualni \nposouvani \npohybujicich \nse tercu;
+            fork again    
+                :Hrace \n<b>"Klikne a podrzi"</b> \n;
+            end fork
+            if(trefa do terce?) then (Trefa)
+                :Navyseni \nlimitu \no 1 sec ;
+            else (Netrefa)
+                :Snizeni \nlimitu \no 3 sec ;
+            end if
+        repeat while (vyprsel cas?) is (Ne) not (Ano)
+    endswitch
+    :Zobrazeni obrazovky \nse statistikami;
+    note right
+        Statistiky:
+        - Cas hry
+        - Skore
+        - Presnost
+        Tlacitka:
+        - Zopakovat level
+        - Zpet na hlavni menu
+    end note
+    if(volba?) then (Zopakovat level)
+        -> [Back to start obtiznosti] : Vybrana stejna obtiznost;
+        --> [Zahajeni hry]
+    else (Zpet na hlavni menu)
+        --> [start]
+    end if
+stop
+@enduml
+
