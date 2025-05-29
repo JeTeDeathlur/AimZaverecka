@@ -15,8 +15,9 @@ public class AimTrainerFrame extends JFrame {
         setVisible(true);
     }
  
-    public void startGame(String nickname, String gameMode,String password) {
-        setContentPane(new GamePanel(nickname, gameMode, password ));
+    public void startGame(String nickname, String gameMode, String password) {
+        setContentPane(new GamePanel(this, nickname, gameMode, password));
         revalidate();
     }
+    
 }

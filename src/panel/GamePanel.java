@@ -16,14 +16,18 @@ public class GamePanel extends JPanel {
     private Timer spawnTimer;
     private Timer countdownTimer;
     private int timeLeft = 10_000;
+
     private final String nickname;
     private final String gameMode;
     private final String password;
+    private final JFrame parentFrame;
 
-    public GamePanel(String nickname, String gameMode, String password) {
+    public GamePanel(JFrame parentFrame, String nickname, String gameMode, String password) {
+        this.parentFrame = parentFrame;
         this.nickname = nickname;
         this.gameMode = gameMode;
         this.password = password;
+
         setBackground(Color.BLACK);
 
         addMouseListener(new MouseAdapter() {
@@ -77,23 +81,21 @@ public class GamePanel extends JPanel {
         EndScreenPanel endScreen = new EndScreenPanel(hits, hits, total - hits, accuracy);
 
         endScreen.addPlayAgainListener(e -> {
-            JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
-            frame.setContentPane(new GamePanel(nickname, gameMode, password));
-            frame.revalidate();
-            frame.repaint();
+            System.out.println(e);
+            parentFrame.setContentPane(new GamePanel(parentFrame, nickname, gameMode, password));
+            parentFrame.revalidate();
+            parentFrame.repaint();
         });
 
         endScreen.addBackToMenuListener(e -> {
-            JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
-            frame.setContentPane(new StartMenuPanel((AimTrainerFrame) frame));
-            frame.revalidate();
-            frame.repaint();
+            parentFrame.setContentPane(new StartMenuPanel((AimTrainerFrame) parentFrame));
+            parentFrame.revalidate();
+            parentFrame.repaint();
         });
 
-        JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
-        frame.setContentPane(endScreen);
-        frame.revalidate();
-        frame.repaint();
+        parentFrame.setContentPane(endScreen);
+        parentFrame.revalidate();
+        parentFrame.repaint();
     }
 
     @Override

@@ -151,6 +151,7 @@ public class StartMenuPanel extends JPanel {
             System.err.println("Error saving to file: " + e.getMessage());
         }
     }
+    
  
  
     public Boolean loginCheck(String user) {
