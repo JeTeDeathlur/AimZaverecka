@@ -73,11 +73,15 @@ public class GamePanel extends JPanel {
     }
 
     private void generateNewTarget() {
-        GameMode mode = GameMode.valueOf(gameMode); 
-        target = TargetFactory.createTarget(GameMode.valueOf(gameMode), getWidth(), getHeight());
+        if (getWidth() == 0 || getHeight() == 0) {
+            SwingUtilities.invokeLater(this::generateNewTarget);
+            return;
+        }
 
-
+        GameMode mode = GameMode.valueOf(gameMode);
+        target = TargetFactory.createTarget(mode, getWidth(), getHeight());
     }
+
 
     private void showEndScreen() {
         double accuracy = total > 0 ? (100.0 * hits / total) : 0.0;

@@ -21,6 +21,7 @@ public class ExplodingTarget extends Target {
         }
     }
 
+
     @Override
     public void draw(Graphics g) {
         if (!exploded) {
