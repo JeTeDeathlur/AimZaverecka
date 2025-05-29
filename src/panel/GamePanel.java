@@ -51,10 +51,11 @@ public class GamePanel extends JPanel {
     private void startGameLoop() {
         spawnTimer = new Timer(16, e -> {
             if (target != null) {
-                target.update();
+                target.update();  
             }
             repaint();
         });
+        
         spawnTimer.start();
 
         countdownTimer = new Timer(10, e -> {
@@ -72,7 +73,10 @@ public class GamePanel extends JPanel {
     }
 
     private void generateNewTarget() {
+        GameMode mode = GameMode.valueOf(gameMode); 
         target = TargetFactory.createTarget(GameMode.valueOf(gameMode), getWidth(), getHeight());
+
+
     }
 
     private void showEndScreen() {
@@ -81,7 +85,6 @@ public class GamePanel extends JPanel {
         EndScreenPanel endScreen = new EndScreenPanel(hits, hits, total - hits, accuracy);
 
         endScreen.addPlayAgainListener(e -> {
-            System.out.println(e);
             parentFrame.setContentPane(new GamePanel(parentFrame, nickname, gameMode, password));
             parentFrame.revalidate();
             parentFrame.repaint();

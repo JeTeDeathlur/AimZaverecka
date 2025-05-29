@@ -3,8 +3,8 @@ package target;
 import java.awt.*;
 
 public class BasicTarget extends Target {
-    public BasicTarget(int x, int y, int radius) {
-        super(x, y, radius);
+    public BasicTarget(int x, int y, int radius, int panelWidth, int panelHeight) {
+        super(x, y, radius, panelWidth, panelHeight);
     }
 
     @Override

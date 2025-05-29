@@ -3,13 +3,19 @@ package target;
 import java.awt.*;
 
 public class ShrinkingTarget extends Target {
-    public ShrinkingTarget(int x, int y, int radius) {
-        super(x, y, radius);
+    private int shrinkSpeed = 1;
+    private int minRadius = 5;
+
+    public ShrinkingTarget(int x, int y, int radius, int panelWidth, int panelHeight) {
+        super(x, y, radius, panelWidth, panelHeight);
     }
 
     @Override
     public void update() {
-        if (radius > 10) radius--;
+        radius -= shrinkSpeed;
+        if (radius < minRadius) {
+            radius = minRadius; 
+        }
     }
 
     @Override
