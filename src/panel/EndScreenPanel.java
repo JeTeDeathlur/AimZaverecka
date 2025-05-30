@@ -23,8 +23,9 @@ public class EndScreenPanel extends JPanel {
         titleLabel.setForeground(Color.BLACK);
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        scoreLabel = new JLabel("<html><div align='center'><b>Total Score: " + totalScore +
-                "</b><br><br>Score This Game: " + score +
+        scoreLabel = new JLabel("<html><div align='center'>" +
+                "<b><span style='color:green;'>Total Score: " + totalScore + "</span></b>" +
+                "<br><br>Score This Game: " + score +
                 "<br>Hits: " + hits +
                 "<br>Misses: " + misses +
                 "<br>Accuracy: " + String.format("%.2f", accuracy) + "%</div></html>");

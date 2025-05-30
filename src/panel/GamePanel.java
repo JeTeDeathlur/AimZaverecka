@@ -18,12 +18,14 @@ public class GamePanel extends JPanel {
     private Timer countdownTimer;
     private int timeLeft = 10_000;
 
-    private boolean gameOver = false; 
+    private boolean gameOver = false;
 
     private final String nickname;
     private final String gameMode;
     private final String password;
     private final JFrame parentFrame;
+
+    private Image backgroundImage;
 
     public GamePanel(JFrame parentFrame, String nickname, String gameMode, String password) {
         this.parentFrame = parentFrame;
@@ -31,7 +33,7 @@ public class GamePanel extends JPanel {
         this.gameMode = gameMode;
         this.password = password;
 
-        setBackground(Color.BLACK);
+        loadBackgroundImage();
 
         addMouseListener(new MouseAdapter() {
             @Override
@@ -51,6 +53,24 @@ public class GamePanel extends JPanel {
         });
 
         startGameLoop();
+    }
+
+    private void loadBackgroundImage() {
+        String path = switch (gameMode) {
+            case "EASY" -> "/Pictures/easy.jpg";
+            case "MEDIUM" -> "/Pictures/medium.jpg";
+            case "HARD" -> "/Pictures/hard.jpg";
+            default -> null;
+        };
+
+        if (path != null) {
+            try {
+                backgroundImage = new ImageIcon(getClass().getResource(path)).getImage();
+            } catch (Exception e) {
+                System.err.println("Background image not found: " + path);
+                backgroundImage = null;
+            }
+        }
     }
 
     private void startGameLoop() {
@@ -114,6 +134,14 @@ public class GamePanel extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
+
+        if (backgroundImage != null) {
+            g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
+        } else {
+            g.setColor(Color.BLACK);
+            g.fillRect(0, 0, getWidth(), getHeight());
+        }
+
         if (target != null) {
             target.draw(g);
         }
@@ -128,24 +156,15 @@ public class GamePanel extends JPanel {
         g.drawString("Total: " + total, 10, 70);
         g.drawString("Time: " + timeLeft / 1000.0 + "s", 10, 95);
         this.totalScore = setScore(gameMode);
-        g.drawString("Score: " + this.totalScore, 10, 120);
+        g.drawString("Score: " + this.totalScore, 10, 110);
     }
 
     private int setScore(String mode) {
-        int score;
-        switch (mode) {
-            case "EASY":
-                score = this.hits * 1;
-                break;
-            case "MEDIUM":
-                score = this.hits * 2;
-                break;
-            case "HARD":
-                score = this.hits * 3;
-                break;
-            default:
-                score = 0;
-        }
-        return score;
+        return switch (mode) {
+            case "EASY" -> this.hits * 1;
+            case "MEDIUM" -> this.hits * 2;
+            case "HARD" -> this.hits * 3;
+            default -> 0;
+        };
     }
 }

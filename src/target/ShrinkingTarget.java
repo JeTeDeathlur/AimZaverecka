@@ -20,7 +20,7 @@ public class ShrinkingTarget extends Target {
 
     @Override
     public void draw(Graphics g) {
-        g.setColor(Color.GRAY);
+        g.setColor(Color.PINK);
         g.fillOval(x - radius, y - radius, radius * 2, radius * 2);
     }
 }
