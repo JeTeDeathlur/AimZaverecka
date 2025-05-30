@@ -11,9 +11,10 @@ public class EndScreenPanel extends JPanel {
     private final JButton backToMenuButton;
 
     public EndScreenPanel(String nickname, int score, int hits, int misses, double accuracy) {
-        int existingScore = 0;
-        int totalScore = score + existingScore;
-        String tempScore = getExistingScore(nickname);
+        updateScore(nickname, score);
+
+        String totalScore = getExistingScore(nickname);
+
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setBackground(Color.WHITE);
 
@@ -22,8 +23,8 @@ public class EndScreenPanel extends JPanel {
         titleLabel.setForeground(Color.BLACK);
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        scoreLabel = new JLabel("<html><div align='center'><b>Total Score: " + tempScore +
-                "</b><br><br>Score: " + score +
+        scoreLabel = new JLabel("<html><div align='center'><b>Total Score: " + totalScore +
+                "</b><br><br>Score This Game: " + score +
                 "<br>Hits: " + hits +
                 "<br>Misses: " + misses +
                 "<br>Accuracy: " + String.format("%.2f", accuracy) + "%</div></html>");
@@ -48,7 +49,6 @@ public class EndScreenPanel extends JPanel {
         backToMenuButton.setPreferredSize(buttonSize);
         backToMenuButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-
         add(Box.createVerticalGlue());
         add(titleLabel);
         add(Box.createRigidArea(new Dimension(0, 20)));
@@ -68,37 +68,54 @@ public class EndScreenPanel extends JPanel {
         backToMenuButton.addActionListener(listener);
     }
 
-    /*private int addNewScore(String username, int newScore){
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter("Registrations.csv", true))) {
-            bw.write(data);
-        } catch (IOException e) {
-            System.err.println("Error saving to file: " + e.getMessage());
-        }
-    }*/
-    
-    private String getExistingScore(String username){
-        String score = "";
+    private String getExistingScore(String username) {
+        String score = "0";
         File file = new File("Registrations.csv");
         if (!file.exists()) return score;
- 
+
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 if (line.trim().isEmpty()) continue;
                 String[] parts = line.split(",");
-                System.out.println("length: " + parts.length);
-                System.out.println("username: " + username);
-                System.out.println("nickname: " + parts[0]);
-                System.out.println("score: " + parts[2]);
-                if (parts.length == 3 && parts[0].equals(username) ) {
+                if (parts.length >= 3 && parts[0].equals(username)) {
                     score = parts[2];
-                    System.out.println("score: " + score);
-
                 }
             }
         } catch (IOException e) {
             System.err.println("Error loading data: " + e.getMessage());
         }
         return score;
+    }
+
+    private void updateScore(String username, int scoreToAdd) {
+        File file = new File("Registrations.csv");
+        File tempFile = new File("Registrations_temp.csv");
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(file));
+             BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile))) {
+
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (line.trim().isEmpty()) continue;
+                String[] parts = line.split(",");
+                if (parts.length >= 2) {
+                    if (parts[0].equals(username)) {
+                        int existingScore = parts.length == 3 ? Integer.parseInt(parts[2]) : 0;
+                        int newScore = existingScore + scoreToAdd;
+                        writer.write(parts[0] + "," + parts[1] + "," + newScore);
+                    } else {
+                        writer.write(line);
+                    }
+                    writer.newLine();
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("Error updating score: " + e.getMessage());
+        }
+
+        if (!file.delete() || !tempFile.renameTo(file)) {
+            System.err.println("Error replacing original score file.");
+        }
     }
 }

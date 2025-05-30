@@ -18,6 +18,8 @@ public class GamePanel extends JPanel {
     private Timer countdownTimer;
     private int timeLeft = 10_000;
 
+    private boolean gameOver = false; 
+
     private final String nickname;
     private final String gameMode;
     private final String password;
@@ -34,6 +36,8 @@ public class GamePanel extends JPanel {
         addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
+                if (gameOver) return;
+
                 if (target != null && target.contains(e.getX(), e.getY())) {
                     hits++;
                     timeLeft += 500;
@@ -52,11 +56,11 @@ public class GamePanel extends JPanel {
     private void startGameLoop() {
         spawnTimer = new Timer(16, e -> {
             if (target != null) {
-                target.update();  
+                target.update();
             }
             repaint();
         });
-        
+
         spawnTimer.start();
 
         countdownTimer = new Timer(10, e -> {
@@ -83,11 +87,12 @@ public class GamePanel extends JPanel {
         target = TargetFactory.createTarget(mode, getWidth(), getHeight());
     }
 
-
     private void showEndScreen() {
+        gameOver = true;
+
         double accuracy = total > 0 ? (100.0 * hits / total) : 0.0;
 
-        EndScreenPanel endScreen = new EndScreenPanel(nickname, this.totalScore, hits,total - hits, accuracy);
+        EndScreenPanel endScreen = new EndScreenPanel(nickname, this.totalScore, hits, total - hits, accuracy);
 
         endScreen.addPlayAgainListener(e -> {
             parentFrame.setContentPane(new GamePanel(parentFrame, nickname, gameMode, password));
@@ -116,7 +121,6 @@ public class GamePanel extends JPanel {
     }
 
     private void drawStats(Graphics g) {
-
         g.setColor(Color.WHITE);
         g.setFont(new Font("Arial", Font.BOLD, 18));
         g.drawString("Nickname: " + nickname, 10, 20);
@@ -124,24 +128,24 @@ public class GamePanel extends JPanel {
         g.drawString("Total: " + total, 10, 70);
         g.drawString("Time: " + timeLeft / 1000.0 + "s", 10, 95);
         this.totalScore = setScore(gameMode);
-        g.drawString("Score: " + this.totalScore, 10, 110);
+        g.drawString("Score: " + this.totalScore, 10, 120);
     }
 
-    private int setScore(String mode ) {
+    private int setScore(String mode) {
         int score;
         switch (mode) {
             case "EASY":
-                score= this.hits * 1;
+                score = this.hits * 1;
                 break;
             case "MEDIUM":
-                score= this.hits * 2;
+                score = this.hits * 2;
                 break;
             case "HARD":
-                score= this.hits * 3;
+                score = this.hits * 3;
                 break;
             default:
-                score=0;
-        };
+                score = 0;
+        }
         return score;
     }
 }
