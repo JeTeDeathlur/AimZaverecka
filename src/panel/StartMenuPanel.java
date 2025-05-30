@@ -63,7 +63,14 @@ public class StartMenuPanel extends JPanel {
         add(difficultyBox, gbc);
  
         gbc.gridy++; gbc.gridx = 0; gbc.gridwidth = 2;
+        Font startButtonFont = new Font("Arial", Font.BOLD, 14);
+        Dimension startButtonSize = new Dimension(200, 40);
+
         JButton startButton = new JButton("Start Game");
+
+        startButton.setFont(startButtonFont);
+        startButton.setMaximumSize(startButtonSize);
+        startButton.setPreferredSize(startButtonSize);
         add(startButton, gbc);
  
         startButton.addActionListener((ActionEvent e) -> {

@@ -2,36 +2,52 @@ package panel;
 
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.io.*;
 import javax.swing.*;
-
 
 public class EndScreenPanel extends JPanel {
     private final JLabel scoreLabel;
     private final JButton playAgainButton;
     private final JButton backToMenuButton;
 
-    public EndScreenPanel(int score, int hits, int misses, double accuracy) {
+    public EndScreenPanel(String nickname, int score, int hits, int misses, double accuracy) {
+        int existingScore = 0;
+        int totalScore = score + existingScore;
+        String tempScore = getExistingScore(nickname);
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        setBackground(Color.DARK_GRAY);
+        setBackground(Color.WHITE);
 
         JLabel titleLabel = new JLabel("Game Over");
         titleLabel.setFont(new Font("Arial", Font.BOLD, 28));
-        titleLabel.setForeground(Color.WHITE);
+        titleLabel.setForeground(Color.BLACK);
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        scoreLabel = new JLabel("<html>Score: " + score +
+        scoreLabel = new JLabel("<html><div align='center'><b>Total Score: " + tempScore +
+                "</b><br><br>Score: " + score +
                 "<br>Hits: " + hits +
                 "<br>Misses: " + misses +
-                "<br>Accuracy: " + String.format("%.2f", accuracy) + "%</html>");
+                "<br>Accuracy: " + String.format("%.2f", accuracy) + "%</div></html>");
+
         scoreLabel.setFont(new Font("Arial", Font.PLAIN, 20));
-        scoreLabel.setForeground(Color.WHITE);
+        scoreLabel.setForeground(Color.RED);
         scoreLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        scoreLabel.setHorizontalAlignment(SwingConstants.CENTER);
+
+        Font buttonFont = new Font("Arial", Font.BOLD, 14);
+        Dimension buttonSize = new Dimension(200, 40);
 
         playAgainButton = new JButton("Play Again");
+        playAgainButton.setFont(buttonFont);
+        playAgainButton.setMaximumSize(buttonSize);
+        playAgainButton.setPreferredSize(buttonSize);
         playAgainButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        backToMenuButton = new JButton("Back to main screen");
+        backToMenuButton = new JButton("Main Screen");
+        backToMenuButton.setFont(buttonFont);
+        backToMenuButton.setMaximumSize(buttonSize);
+        backToMenuButton.setPreferredSize(buttonSize);
         backToMenuButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+
 
         add(Box.createVerticalGlue());
         add(titleLabel);
@@ -50,5 +66,39 @@ public class EndScreenPanel extends JPanel {
 
     public void addBackToMenuListener(ActionListener listener) {
         backToMenuButton.addActionListener(listener);
+    }
+
+    /*private int addNewScore(String username, int newScore){
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter("Registrations.csv", true))) {
+            bw.write(data);
+        } catch (IOException e) {
+            System.err.println("Error saving to file: " + e.getMessage());
+        }
+    }*/
+    
+    private String getExistingScore(String username){
+        String score = "";
+        File file = new File("Registrations.csv");
+        if (!file.exists()) return score;
+ 
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (line.trim().isEmpty()) continue;
+                String[] parts = line.split(",");
+                System.out.println("length: " + parts.length);
+                System.out.println("username: " + username);
+                System.out.println("nickname: " + parts[0]);
+                System.out.println("score: " + parts[2]);
+                if (parts.length == 3 && parts[0].equals(username) ) {
+                    score = parts[2];
+                    System.out.println("score: " + score);
+
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("Error loading data: " + e.getMessage());
+        }
+        return score;
     }
 }

@@ -23,5 +23,6 @@ public class ScoreManager<T> {
 
     public void saveScore(String nickname, int score) {
         System.out.println("Player Score " + nickname + ": " + score);
+        
     }
 }

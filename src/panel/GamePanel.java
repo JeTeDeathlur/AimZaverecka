@@ -12,6 +12,7 @@ import target.Target;
 public class GamePanel extends JPanel {
     private int hits = 0;
     private int total = 0;
+    private int totalScore = 0;
     private Target target;
     private Timer spawnTimer;
     private Timer countdownTimer;
@@ -73,16 +74,20 @@ public class GamePanel extends JPanel {
     }
 
     private void generateNewTarget() {
-        GameMode mode = GameMode.valueOf(gameMode); 
-        target = TargetFactory.createTarget(GameMode.valueOf(gameMode), getWidth(), getHeight());
+        if (getWidth() == 0 || getHeight() == 0) {
+            SwingUtilities.invokeLater(this::generateNewTarget);
+            return;
+        }
 
-
+        GameMode mode = GameMode.valueOf(gameMode);
+        target = TargetFactory.createTarget(mode, getWidth(), getHeight());
     }
+
 
     private void showEndScreen() {
         double accuracy = total > 0 ? (100.0 * hits / total) : 0.0;
 
-        EndScreenPanel endScreen = new EndScreenPanel(hits, hits, total - hits, accuracy);
+        EndScreenPanel endScreen = new EndScreenPanel(nickname, this.totalScore, hits,total - hits, accuracy);
 
         endScreen.addPlayAgainListener(e -> {
             parentFrame.setContentPane(new GamePanel(parentFrame, nickname, gameMode, password));
@@ -111,11 +116,32 @@ public class GamePanel extends JPanel {
     }
 
     private void drawStats(Graphics g) {
+
         g.setColor(Color.WHITE);
         g.setFont(new Font("Arial", Font.BOLD, 18));
         g.drawString("Nickname: " + nickname, 10, 20);
         g.drawString("Hits: " + hits, 10, 45);
         g.drawString("Total: " + total, 10, 70);
         g.drawString("Time: " + timeLeft / 1000.0 + "s", 10, 95);
+        this.totalScore = setScore(gameMode);
+        g.drawString("Score: " + this.totalScore, 10, 110);
+    }
+
+    private int setScore(String mode ) {
+        int score;
+        switch (mode) {
+            case "EASY":
+                score= this.hits * 1;
+                break;
+            case "MEDIUM":
+                score= this.hits * 2;
+                break;
+            case "HARD":
+                score= this.hits * 3;
+                break;
+            default:
+                score=0;
+        };
+        return score;
     }
 }

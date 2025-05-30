@@ -12,7 +12,7 @@ public class BasicTarget extends Target {
 
     @Override
     public void draw(Graphics g) {
-        g.setColor(Color.RED);
+        g.setColor(Color.WHITE);
         g.fillOval(x - radius, y - radius, radius * 2, radius * 2);
     }
 }

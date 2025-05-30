@@ -4,7 +4,7 @@ import java.awt.*;
 import java.util.Random;
 
 public class TeleportingTarget extends Target {
-    private int teleportCooldown = 60; 
+    private int teleportCooldown = 30; 
     private int tick = 0;
     private Random rand = new Random();
 
