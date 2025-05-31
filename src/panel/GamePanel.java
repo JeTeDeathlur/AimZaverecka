@@ -120,9 +120,9 @@ public class GamePanel extends JPanel {
 
     private void loadBackgroundImage() {
         String path = switch (gameMode) {
-            case "EASY" -> "/Pictures/easy.jpg";
-            case "MEDIUM" -> "/Pictures/medium.jpg";
-            case "HARD" -> "/Pictures/hard.jpg";
+            case "EASY" -> "/Pictures/easy.png";
+            case "MEDIUM" -> "/Pictures/medium.png";
+            case "HARD" -> "/Pictures/hard.png";
             default -> null;
         };
 

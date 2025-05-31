@@ -42,7 +42,7 @@ public class EndScreenPanel extends JPanel {
                 "<br>Misses: " + misses +
                 "<br>Accuracy: " + String.format("%.2f", accuracy) + "%</div></html>");
 
-        scoreLabel.setFont(new Font("Arial", Font.PLAIN, 20));
+        scoreLabel.setFont(new Font("Arial", Font.PLAIN, 15));
         scoreLabel.setForeground(Color.RED);
         scoreLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         scoreLabel.setHorizontalAlignment(SwingConstants.CENTER);
