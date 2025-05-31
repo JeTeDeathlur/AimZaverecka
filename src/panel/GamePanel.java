@@ -9,6 +9,10 @@ import javax.swing.*;
 import model.GameMode;
 import target.Target;
 
+/**
+ * The main game panel where the user plays the aim trainer game.
+ * Handles target generation, scoring, time tracking, and input events.
+ */
 public class GamePanel extends JPanel {
     private int hits = 0;
     private int total = 0;
@@ -27,6 +31,14 @@ public class GamePanel extends JPanel {
 
     private Image backgroundImage;
 
+    /**
+     * Constructs the game panel for a given player and mode.
+     *
+     * @param parentFrame the parent JFrame
+     * @param nickname player's nickname
+     * @param gameMode difficulty level selected
+     * @param password player's password
+     */
     public GamePanel(JFrame parentFrame, String nickname, String gameMode, String password) {
         this.parentFrame = parentFrame;
         this.nickname = nickname;
@@ -54,7 +66,9 @@ public class GamePanel extends JPanel {
 
         startGameLoop();
     }
-
+    /**
+     * Loads the background image based on the selected game mode.
+     */
     private void loadBackgroundImage() {
         String path = switch (gameMode) {
             case "EASY" -> "/Pictures/easy.jpg";
@@ -72,7 +86,9 @@ public class GamePanel extends JPanel {
             }
         }
     }
-
+    /**
+     * Starts the game loop including the target update and countdown timers.
+     */
     private void startGameLoop() {
         spawnTimer = new Timer(16, e -> {
             if (target != null) {
@@ -96,7 +112,9 @@ public class GamePanel extends JPanel {
 
         generateNewTarget();
     }
-
+    /**
+     * Generates a new target based on the selected difficulty.
+     */
     private void generateNewTarget() {
         if (getWidth() == 0 || getHeight() == 0) {
             SwingUtilities.invokeLater(this::generateNewTarget);
@@ -107,6 +125,9 @@ public class GamePanel extends JPanel {
         target = TargetFactory.createTarget(mode, getWidth(), getHeight());
     }
 
+    /**
+     * Ends the game and transitions to the end screen panel.
+     */
     private void showEndScreen() {
         gameOver = true;
 
@@ -131,6 +152,12 @@ public class GamePanel extends JPanel {
         parentFrame.repaint();
     }
 
+
+    /**
+     * Custom rendering of the game panel, including background and stats.
+     *
+     * @param g the graphics context
+     */
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -148,6 +175,11 @@ public class GamePanel extends JPanel {
         drawStats(g);
     }
 
+    /**
+     * Draws the game stats (nickname, hits, total shots, time, score).
+     *
+     * @param g the graphics context
+     */
     private void drawStats(Graphics g) {
         g.setColor(Color.WHITE);
         g.setFont(new Font("Arial", Font.BOLD, 18));
@@ -156,9 +188,14 @@ public class GamePanel extends JPanel {
         g.drawString("Total: " + total, 10, 70);
         g.drawString("Time: " + timeLeft / 1000.0 + "s", 10, 95);
         this.totalScore = setScore(gameMode);
-        g.drawString("Score: " + this.totalScore, 10, 110);
+        g.drawString("Score: " + this.totalScore, 10, 120);
     }
-
+    /**
+     * Calculates the score based on the difficulty mode.
+     *
+     * @param mode the difficulty level as string
+     * @return score multiplier based on hits
+     */
     private int setScore(String mode) {
         return switch (mode) {
             case "EASY" -> this.hits * 1;

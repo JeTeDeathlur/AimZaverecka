@@ -1,6 +1,9 @@
 package target;
 
 import java.awt.*;
+/**
+ * A target that moves in a zigzag pattern and bounces on edges.
+ */
 
 public class ZigZagTarget extends Target {
     private final int panelWidth;
@@ -9,12 +12,18 @@ public class ZigZagTarget extends Target {
     private int dy = 2;
     private int counter = 0;
 
+    /**
+     * Constructs a ZigZagTarget.
+     */
     public ZigZagTarget(int x, int y, int radius, int panelWidth, int panelHeight) {
         super(x, y, radius, panelWidth, panelHeight);
         this.panelWidth = panelWidth;
         this.panelHeight = panelHeight;
     }
 
+    /**
+     * Updates the zigzag movement of the target.
+     */
     @Override
     public void update() {
         x += dx;
@@ -28,6 +37,9 @@ public class ZigZagTarget extends Target {
         if (y < radius || y > panelHeight - radius) dy = -dy;
     }
 
+    /**
+     * Draws the zigzag-moving target.
+     */
     @Override
     public void draw(Graphics g) {
         g.setColor(Color.MAGENTA);

@@ -4,12 +4,24 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.io.*;
 import javax.swing.*;
-
+/**
+ * Panel displayed after the game ends.
+ * Shows the player's performance and allows them to restart or return to the main menu.
+ */
 public class EndScreenPanel extends JPanel {
     private final JLabel scoreLabel;
     private final JButton playAgainButton;
     private final JButton backToMenuButton;
 
+    /**
+     * Constructs the end screen panel and updates the player's total score.
+     *
+     * @param nickname the player's nickname
+     * @param score the score earned in the current game
+     * @param hits number of successful hits
+     * @param misses number of missed shots
+     * @param accuracy hit accuracy in percentage
+     */
     public EndScreenPanel(String nickname, int score, int hits, int misses, double accuracy) {
         updateScore(nickname, score);
 
@@ -61,14 +73,29 @@ public class EndScreenPanel extends JPanel {
         add(Box.createVerticalGlue());
     }
 
+    /**
+     * Adds a listener to the "Play Again" button.
+     *
+     * @param listener action listener to trigger a new game
+     */
     public void addPlayAgainListener(ActionListener listener) {
         playAgainButton.addActionListener(listener);
     }
 
+    /**
+     * Adds a listener to the "Main Screen" button.
+     *
+     * @param listener action listener to return to main menu
+     */
     public void addBackToMenuListener(ActionListener listener) {
         backToMenuButton.addActionListener(listener);
     }
-
+    /**
+     * Retrieves the player's existing total score from the file.
+     *
+     * @param username the player's nickname
+     * @return the saved score as a string (defaults to "0" if not found)
+     */
     private String getExistingScore(String username) {
         String score = "0";
         File file = new File("Registrations.csv");
@@ -89,6 +116,12 @@ public class EndScreenPanel extends JPanel {
         return score;
     }
 
+    /**
+     * Updates the player's total score by adding new points and saving the result back to file.
+     *
+     * @param username the player's nickname
+     * @param scoreToAdd score to add to the existing total
+     */
     private void updateScore(String username, int scoreToAdd) {
         File file = new File("Registrations.csv");
         File tempFile = new File("Registrations_temp.csv");

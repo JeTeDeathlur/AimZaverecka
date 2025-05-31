@@ -9,11 +9,20 @@ import java.util.Map;
 import javax.swing.*;
 import model.GameMode;
 import util.RegexValidator;
- 
+
+/**
+ * The start menu panel where users can log in or sign up,
+ * choose difficulty, and start the game.
+ */
 public class StartMenuPanel extends JPanel {
     private final AimTrainerFrame frame;
     private final Map<String, String> credentials = new HashMap<>();
- 
+
+    /**
+     * Constructs the start menu panel and loads registered user credentials.
+     *
+     * @param frame the main application frame
+     */
     public StartMenuPanel(AimTrainerFrame frame) {
         this.frame = frame;
         loadCredentials();
@@ -92,6 +101,11 @@ public class StartMenuPanel extends JPanel {
                             "Nickname already exists! Try login.",
                             "Nickname Exists",
                             JOptionPane.ERROR_MESSAGE);
+                } else if (password.isEmpty()) {
+                    JOptionPane.showMessageDialog(this,
+                            "Password cannot be empty!",
+                            "Invalid Password",
+                            JOptionPane.WARNING_MESSAGE);
                 } else {
                     credentials.put(nickname, password);
                     saveToFile(nickname + "," + password);
@@ -101,7 +115,8 @@ public class StartMenuPanel extends JPanel {
                             JOptionPane.INFORMATION_MESSAGE);
                     canGameStart = true;
                 }
-            } else {
+
+                } else {
                 if (!credentials.containsKey(nickname)) {
                     JOptionPane.showMessageDialog(this,
                             "Nickname not found! Please sign up.",
@@ -129,7 +144,9 @@ public class StartMenuPanel extends JPanel {
 
 
 
-
+    /**
+     * Loads user credentials from the "Registrations.csv" file.
+     */
     private void loadCredentials() {
         File file = new File("Registrations.csv");
         if (!file.exists()) return;
@@ -149,7 +166,11 @@ public class StartMenuPanel extends JPanel {
             System.err.println("Error loading credentials: " + e.getMessage());
         }
     }
- 
+    /**
+     * Appends new user registration data to the "Registrations.csv" file.
+     *
+     * @param data comma-separated nickname and password
+     */
     public void saveToFile(String data) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter("Registrations.csv", true))) {
             bw.write(data);
@@ -158,9 +179,14 @@ public class StartMenuPanel extends JPanel {
             System.err.println("Error saving to file: " + e.getMessage());
         }
     }
-    
- 
- 
+
+
+    /**
+     * Checks if a user is already registered.
+     *
+     * @param user the nickname to check
+     * @return true if the user exists, false otherwise
+     */
     public Boolean loginCheck(String user) {
         return credentials.containsKey(user);
     }

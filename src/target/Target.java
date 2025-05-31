@@ -2,10 +2,17 @@ package target;
 
 import java.awt.*;
 
+
+/**
+ * Abstract base class for all types of targets.
+ */
 public abstract class Target {
     protected int x, y, radius;
     protected int panelWidth, panelHeight;
 
+    /**
+     * Constructs a Target with position, radius and panel bounds.
+     */
     public Target(int x, int y, int radius, int panelWidth, int panelHeight) {
         this.x = x;
         this.y = y;
@@ -14,8 +21,19 @@ public abstract class Target {
         this.panelHeight = panelHeight;
     }
 
+
+    /**
+     * Updates the target's state.
+     */
     public abstract void update();
+    /**
+     * Renders the target on the screen.
+     */
     public abstract void draw(Graphics g);
+
+    /**
+     * Checks if a point (mouse click) is inside the target.
+     */
 
     public boolean contains(int mx, int my) {
         int dx = x - mx;
