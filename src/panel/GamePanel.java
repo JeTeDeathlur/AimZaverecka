@@ -24,6 +24,14 @@ import java.util.Iterator;
  * ExplodingTarget, which splits into two smaller targets upon being hit.
  */
 public class GamePanel extends JPanel {
+
+    //for test
+    public int getHits() { return hits; }
+    public int getMisses() { return total - hits; }
+    public void incrementHits() { hits++; }
+    public int calculateScore(String mode) { return setScore(mode); }
+
+    //for test^^^
     private int hits = 0;
     private int total = 0;
     private int totalScore = 0;

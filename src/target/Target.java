@@ -10,6 +10,21 @@ public abstract class Target {
     protected int x, y, radius;
     protected int panelWidth, panelHeight;
 
+    //for test
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public int getRadius() {
+        return radius;
+    }
+    //for tests^
+
+
     /**
      * Constructs a Target with position, radius and panel bounds.
      */
