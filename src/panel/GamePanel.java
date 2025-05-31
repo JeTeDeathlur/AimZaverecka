@@ -7,17 +7,28 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.*;
 import model.GameMode;
+import target.ExplodingTarget;
 import target.Target;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Iterator;
+
+
 
 /**
- * The main game panel where the user plays the aim trainer game.
- * Handles target generation, scoring, time tracking, and input events.
+ * GamePanel is the main gameplay component of the Aim Trainer application.
+ * It manages target generation, mouse interactions, time control, scoring logic,
+ * and transitions to the end screen upon game completion.
+ *
+ * It supports multiple active targets, including special types such as
+ * ExplodingTarget, which splits into two smaller targets upon being hit.
  */
 public class GamePanel extends JPanel {
     private int hits = 0;
     private int total = 0;
     private int totalScore = 0;
-    private Target target;
+    private List<Target> activeTargets = new ArrayList<>();
+
     private Timer spawnTimer;
     private Timer countdownTimer;
     private int timeLeft = 10_000;
@@ -32,12 +43,12 @@ public class GamePanel extends JPanel {
     private Image backgroundImage;
 
     /**
-     * Constructs the game panel for a given player and mode.
+     * Constructs a new GamePanel for a given player and game mode.
      *
-     * @param parentFrame the parent JFrame
-     * @param nickname player's nickname
-     * @param gameMode difficulty level selected
-     * @param password player's password
+     * @param parentFrame the parent JFrame to which this panel belongs
+     * @param nickname    the player's nickname
+     * @param gameMode    the selected game difficulty ("EASY", "MEDIUM", "HARD")
+     * @param password    the player's password (optional)
      */
     public GamePanel(JFrame parentFrame, String nickname, String gameMode, String password) {
         this.parentFrame = parentFrame;
@@ -48,27 +59,65 @@ public class GamePanel extends JPanel {
         loadBackgroundImage();
 
         addMouseListener(new MouseAdapter() {
+            /**
+             * Mouse interaction handler that detects hits on active targets.
+             * - Increases score and time for hits
+             * - Decreases time for misses
+             * - If an ExplodingTarget is hit, two new targets are added
+             */
+
+
             @Override
             public void mousePressed(MouseEvent e) {
                 if (gameOver) return;
 
-                if (target != null && target.contains(e.getX(), e.getY())) {
-                    hits++;
-                    timeLeft += 500;
-                } else {
+                boolean hit = false;
+                List<Target> newTargets = new ArrayList<>();
+
+                Iterator<Target> iterator = activeTargets.iterator();
+                while (iterator.hasNext()) {
+                    Target t = iterator.next();
+                    if (t.contains(e.getX(), e.getY())) {
+                        hit = true;
+                        hits++;
+                        timeLeft += 500;
+                        iterator.remove();
+
+                        if (t instanceof ExplodingTarget exploding && exploding.isReadyToSpawn()) {
+                            newTargets.addAll(exploding.spawnChildren());
+                        }
+                        break;
+                    }
+                }
+
+                if (!hit) {
                     timeLeft -= 3000;
                 }
+
+
+                if (activeTargets.isEmpty()) {
+                    activeTargets.add(TargetFactory.createTarget(GameMode.valueOf(gameMode), getWidth(), getHeight()));
+                }
+
+                activeTargets.addAll(newTargets);
+
                 total++;
-                generateNewTarget();
                 repaint();
             }
+
+
         });
 
         startGameLoop();
     }
+
+
+
     /**
-     * Loads the background image based on the selected game mode.
+     * Loads the background image appropriate to the selected game mode.
+     * Falls back to a black background if the image cannot be loaded.
      */
+
     private void loadBackgroundImage() {
         String path = switch (gameMode) {
             case "EASY" -> "/Pictures/easy.jpg";
@@ -87,15 +136,20 @@ public class GamePanel extends JPanel {
         }
     }
     /**
-     * Starts the game loop including the target update and countdown timers.
+     * Initializes the main game loop, including:
+     * - A high-frequency timer for updating targets (movement, animation, etc.)
+     * - A countdown timer to track remaining game time
+     * - The first target generation
      */
+
     private void startGameLoop() {
         spawnTimer = new Timer(16, e -> {
-            if (target != null) {
-                target.update();
+            for (Target t : activeTargets) {
+                t.update();
             }
             repaint();
         });
+
 
         spawnTimer.start();
 
@@ -113,8 +167,10 @@ public class GamePanel extends JPanel {
         generateNewTarget();
     }
     /**
-     * Generates a new target based on the selected difficulty.
+     * Generates a new target based on the current game mode.
+     * Clears any previous active targets before adding a new one.
      */
+
     private void generateNewTarget() {
         if (getWidth() == 0 || getHeight() == 0) {
             SwingUtilities.invokeLater(this::generateNewTarget);
@@ -122,12 +178,16 @@ public class GamePanel extends JPanel {
         }
 
         GameMode mode = GameMode.valueOf(gameMode);
-        target = TargetFactory.createTarget(mode, getWidth(), getHeight());
+        activeTargets.clear();
+        activeTargets.add(TargetFactory.createTarget(mode, getWidth(), getHeight()));
     }
 
+
     /**
-     * Ends the game and transitions to the end screen panel.
+     * Displays the end screen panel with game statistics and options
+     * to return to the main menu or restart the game.
      */
+
     private void showEndScreen() {
         gameOver = true;
 
@@ -152,12 +212,12 @@ public class GamePanel extends JPanel {
         parentFrame.repaint();
     }
 
-
     /**
-     * Custom rendering of the game panel, including background and stats.
+     * Renders the background, active targets, and player statistics.
      *
-     * @param g the graphics context
+     * @param g the Graphics context used to draw the UI
      */
+
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -169,17 +229,20 @@ public class GamePanel extends JPanel {
             g.fillRect(0, 0, getWidth(), getHeight());
         }
 
-        if (target != null) {
-            target.draw(g);
+        for (Target t : activeTargets) {
+            t.draw(g);
         }
+
         drawStats(g);
     }
 
     /**
-     * Draws the game stats (nickname, hits, total shots, time, score).
+     * Draws the in-game statistics (nickname, hit count, total shots,
+     * remaining time, and calculated score).
      *
-     * @param g the graphics context
+     * @param g the Graphics context used to render the stats
      */
+
     private void drawStats(Graphics g) {
         g.setColor(Color.WHITE);
         g.setFont(new Font("Arial", Font.BOLD, 18));
@@ -191,11 +254,13 @@ public class GamePanel extends JPanel {
         g.drawString("Score: " + this.totalScore, 10, 120);
     }
     /**
-     * Calculates the score based on the difficulty mode.
+     * Calculates the player's score based on the number of hits and
+     * the selected game difficulty.
      *
-     * @param mode the difficulty level as string
-     * @return score multiplier based on hits
+     * @param mode the difficulty level as a string
+     * @return the total calculated score
      */
+
     private int setScore(String mode) {
         return switch (mode) {
             case "EASY" -> this.hits * 1;
